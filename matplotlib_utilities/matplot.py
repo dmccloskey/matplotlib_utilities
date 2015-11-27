@@ -119,8 +119,14 @@ class matplot():
                 plt.show();
         except IndexError as e:
             print(e);
-    def _extractPCAScores(self,data_I,axis1_I=1,axis2_I=2):
-        '''extract out pca data from [{},{},{}] format'''
+    def _extractPCAScores(self,data_I,axis1_I=1,axis2_I=2,response_I='sample_name_abbreviation'):
+        '''extract out pca data from [{},{},{}] format
+        INPUT:
+        data_I = list of dictionaries
+        axis1_I = int, axis 1
+        axis2_I = int, axis 2
+        response_I = name of the response variable (default = sample_name_abbreviation)
+        '''
         x_data = [];
         y_data = [];
         xlabel = '';
@@ -151,18 +157,23 @@ class matplot():
                         #perc_var[j] = 1 - d['var_cumulative'];
                         perc_var[j] = d['var_proportion'];
                         if j==0:
-                            samples.append(d['sample_name_abbreviation'])
+                            samples.append(d[response_I])
         #extract out specified axis
         x_data = scores_mat[:,axis1_I];
         y_data = scores_mat[:,axis2_I];
-        xlabel = 'PC' + str(axis1_I) + ' [' + str(perc_var[axis1_I-1]*100) + '%]';
-        ylabel = 'PC' + str(axis2_I) + ' [' + str(perc_var[axis2_I-1]*100) + '%]';
+        xlabel = 'PC' + str(axis1_I) + ' [' + str(round(perc_var[axis1_I-1]*100,2)) + '%]';
+        ylabel = 'PC' + str(axis2_I) + ' [' + str(round(perc_var[axis2_I-1]*100,2)) + '%]';
         title = 'Scores';
         text_labels = sns_sorted;
 
         return title,xlabel,ylabel,x_data,y_data,text_labels,samples
-    def _extractPCAScores_tablerows(self,data_I,axis1_I=1,axis2_I=2):
-        '''extract out pca data from [{},{},{}] format'''
+    def _extractPCAScores_tablerows(self,data_I,axis1_I=1,axis2_I=2,response_I='sample_name_abbreviation'):
+        '''extract out pca data from [{},{},{}] format
+        INPUT:
+        data_I = list of dictionaries
+        axis1_I = int, axis 1
+        axis2_I = int, axis 2
+        response_I = name of the response variable (default = sample_name_abbreviation)'''
         
         # determine the number of samples and axes
         sns = []
@@ -187,9 +198,9 @@ class matplot():
                             tmp['score_'+str(c)] = d['score'];
                             tmp['var_proportion_'+str(c)] = d['var_proportion'];
                             tmp['var_cumulative_'+str(c)] = d['var_cumulative'];
-                            tmp['axislabel'+str(c)] = 'PC' + str(c) + ' [' + str(d['var_proportion']*100) + '%]';
+                            tmp['axislabel'+str(c)] = 'PC' + str(c) + ' [' + str(round(d['var_proportion']*100,2)) + '%]';
                             if j==0:
-                                tmp['sample_name_abbreviation'] = d['sample_name_abbreviation'];
+                                tmp[response_I] = d[response_I];
                                 tmp['sample_name_short'] = d['sample_name_short'];
                                 tmp['calculated_concentration_units'] = d['calculated_concentration_units'];
                                 tmp['analysis_id'] = d['analysis_id'];
