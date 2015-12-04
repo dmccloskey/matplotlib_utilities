@@ -167,13 +167,15 @@ class matplot():
         text_labels = sns_sorted;
 
         return title,xlabel,ylabel,x_data,y_data,text_labels,samples
-    def _extractPCAScores_tablerows(self,data_I,axis1_I=1,axis2_I=2,response_I='sample_name_abbreviation'):
+    def _extractPCAScores_tablerows(self,data_I,axis1_I=1,axis2_I=2,response_I='sample_name_abbreviation',additional_keys_I=[]):
         '''extract out pca data from [{},{},{}] format
         INPUT:
         data_I = list of dictionaries
         axis1_I = int, axis 1
         axis2_I = int, axis 2
-        response_I = name of the response variable (default = sample_name_abbreviation)'''
+        response_I = name of the response variable (default = sample_name_abbreviation)
+        additional_keys_I = additional column keys to include in the output listDict
+        '''
         
         # determine the number of samples and axes
         sns = []
@@ -204,6 +206,8 @@ class matplot():
                                 tmp['sample_name_short'] = d['sample_name_short'];
                                 tmp['calculated_concentration_units'] = d['calculated_concentration_units'];
                                 tmp['analysis_id'] = d['analysis_id'];
+                                for key in additional_keys_I:
+                                    tmp[key]=d[key];
                             break;
                     if tmp: cus_tmp.update(tmp);
                 if cus_tmp: data_O.append(cus_tmp);
@@ -242,7 +246,7 @@ class matplot():
         text_labels = cn_sorted;
 
         return title,xlabel,ylabel,x_data,y_data,text_labels
-    def _extractPCALoadings_tablerows(self,data_I,axis1_I=1,axis2_I=2):
+    def _extractPCALoadings_tablerows(self,data_I,axis1_I=1,axis2_I=2,additional_keys_I=[]):
         '''extract out pca data from [{},{},{}] format'''
         
         # determine the number of samples and axes
@@ -272,6 +276,8 @@ class matplot():
                                 tmp['component_name'] = d['component_name'];
                                 tmp['calculated_concentration_units'] = d['calculated_concentration_units'];
                                 tmp['analysis_id'] = d['analysis_id'];
+                                for key in additional_keys_I:
+                                    tmp[key]=d[key];
                             break;
                     if tmp: cus_tmp.update(tmp);
                 if cus_tmp: data_O.append(cus_tmp);
